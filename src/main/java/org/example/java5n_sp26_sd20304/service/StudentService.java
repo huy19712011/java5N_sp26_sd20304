@@ -22,4 +22,14 @@ public class StudentService {
 
         studentRepository.saveStudent(student);
     }
+
+    public Student getStudentById(long id) {
+
+        return studentRepository.getStudentById(id);
+    }
+
+    public void updateStudent(Student student) {
+
+        studentRepository.updateStudent(student);
+    }
 }
