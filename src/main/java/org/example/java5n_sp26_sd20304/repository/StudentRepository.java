@@ -34,4 +34,9 @@ public class StudentRepository {
 
         em.merge(student);
     }
+
+    public void deleteStudentById(long id) {
+
+        em.remove(em.find(Student.class, id));
+    }
 }
