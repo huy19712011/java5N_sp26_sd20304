@@ -1,5 +1,6 @@
 package org.example.java5n_sp26_sd20304.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.java5n_sp26_sd20304.entity.Product;
 import org.example.java5n_sp26_sd20304.repository.ProductRepository;
@@ -17,5 +18,10 @@ public class ProductService {
     public List<Product> getAllProducts() {
 
         return productRepository.findAll();
+    }
+
+    public void saveProduct(@Valid Product product) {
+
+        productRepository.save(product);
     }
 }
