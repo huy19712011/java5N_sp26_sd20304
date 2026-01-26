@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -57,4 +58,32 @@ public class ProductController {
 
         return "redirect:/products";
     }
+
+    @GetMapping("/products/showFormForUpdate/{id}")
+    public String showFormForUpdate(@PathVariable("id") long id, Model model) {
+
+        Product product = productService.getProductById(id);
+
+        model.addAttribute("product", product);
+        model.addAttribute("categories", categoryService.getAllCategories());
+
+        return "views/update_product";
+    }
+
+    @PostMapping("/products/updateProduct")
+    public String updateProduct(@Valid @ModelAttribute("product") Product product,
+                                BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+
+            model.addAttribute("categories", categoryService.getAllCategories());
+
+            return "views/update_product";
+        }
+
+        productService.updateProduct(product);
+
+        return "redirect:/products";
+    }
+
 }

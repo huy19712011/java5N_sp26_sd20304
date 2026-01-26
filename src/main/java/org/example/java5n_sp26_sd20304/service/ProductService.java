@@ -24,4 +24,14 @@ public class ProductService {
 
         productRepository.save(product);
     }
+
+    public Product getProductById(long id) {
+
+        return productRepository.findById(id).get();
+    }
+
+    public void updateProduct(@Valid Product product) {
+
+        productRepository.save(product);
+    }
 }
