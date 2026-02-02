@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.java5n_sp26_sd20304.entity.Product;
 import org.example.java5n_sp26_sd20304.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,5 +36,11 @@ public class ProductService {
     public void updateProduct(@Valid Product product) {
 
         productRepository.save(product);
+    }
+
+    public Page<Product> findPaginated(int pageNo, int pageSide, String sortField, String sortDir) {
+
+        return productRepository.findAll(PageRequest.of(pageNo -1, pageSide,
+                Sort.by(Sort.Direction.fromString(sortDir), sortField)));
     }
 }

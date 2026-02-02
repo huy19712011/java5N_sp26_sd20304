@@ -6,13 +6,11 @@ import org.example.java5n_sp26_sd20304.entity.Product;
 import org.example.java5n_sp26_sd20304.service.CategoryService;
 import org.example.java5n_sp26_sd20304.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +24,7 @@ public class ProductController {
     @GetMapping("/products")
     public String listProducts(Model model) {
 
+        /*
         // get data from db
         List<Product> products = productService.getAllProducts();
 
@@ -33,6 +32,9 @@ public class ProductController {
         model.addAttribute("products", products);
 
         return "views/products"; // .html
+        */
+
+        return findPaginated(1, "name", "asc", model);
     }
 
     @GetMapping("/products/showNewProductForm")
@@ -84,6 +86,34 @@ public class ProductController {
         productService.updateProduct(product);
 
         return "redirect:/products";
+    }
+
+    @GetMapping("/products/page/{pageNo}")
+    public String findPaginated(@PathVariable int pageNo,
+                                @RequestParam("sortField") String sortField,
+                                @RequestParam("sortDir") String sortDir,
+                                Model model) {
+
+        int pageSide = 1;
+
+        Page<Product> page = productService.findPaginated(pageNo, pageSide, sortField, sortDir);
+
+        List<Product> products = page.getContent();
+
+        // send data to view
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+
+        model.addAttribute("pageSize", pageSide);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+
+        model.addAttribute("products", products);
+
+        // view
+        return "views/products";
     }
 
 }
